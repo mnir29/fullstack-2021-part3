@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 let persons = [
@@ -29,6 +30,27 @@ const generateID = () => {
 }
 
 app.use(express.json())
+app.use(morgan((tokens, req, res) => {
+  
+  const baseString = [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+  
+  if (tokens.method(req, res) === 'POST') {
+    morgan.token('body', (req, res) => req.body)
+    return [
+      baseString,
+      JSON.stringify(tokens.body(req, res))
+    ].join(' ')
+  } else {
+    return baseString
+  }
+  
+}))
 
 app.get('/info', (req, res) => {
   const date = new Date()
