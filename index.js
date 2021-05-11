@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const persons = [
+let persons = [
   {
     "id": 1,
     "name": "Arto Hellas",
@@ -25,6 +25,15 @@ const persons = [
 ]
 
 app.use(express.json())
+
+app.get('/info', (req, res) => {
+  const date = new Date()
+  const personString = (persons.length === 1 ? "person" : "persons")
+  res.send(`
+    <p>Phonebook has info for ${persons.length} ${personString}</p>
+    <p>${date}</p>
+  `)
+})
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
