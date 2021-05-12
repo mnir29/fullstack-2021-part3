@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rmdir /Q /S build && cd ../../fullstack-open-2021/osa2/puhelinluettelo && npm run build --prod && Xcopy /E /I \"C:\\Users\\OMISTAJA\\OneDrive - TUNI.fi\\Omat projektit\\FullStackOpen2021\\fullstack-open-2021\\osa2\\puhelinluettelo\\build\" \"C:\\Users\\OMISTAJA\\OneDrive - TUNI.fi\\Omat projektit\\FullStackOpen2021\\fullstack-open-2021-part3\\fullstack-2021-part3\\build\\\"",
     "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",    
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
   "author": "Markku Nirkkonen",
@@ -17,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.12.8",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
