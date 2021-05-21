@@ -5,38 +5,11 @@ const cors = require('cors')
 const app = express()
 const Contact = require('./models/contact')
 
-// let persons = [
-//   {
-//     "id": 1,
-//     "name": "Arto Hellas",
-//     "number": "040-123456"   
-//   },
-//   {
-//     "id": 2,
-//     "name": "Ada Lovelace",
-//     "number": "39-44-5323523"
-//   },
-//   {
-//     "id": 3,
-//     "name": "Dan Abramov",
-//     "number": "39-44-5323523"
-//   },
-//   {
-//     "id": 4,
-//     "name": "Mary Poppendieck",
-//     "number": "39-23-6423122"
-//   }
-// ]
-
-// const generateID = () => {
-//   return Math.floor(Math.random() * 1000000)
-// }
-
 app.use(express.json())
 app.use(express.static('build'))
 app.use(cors())
 app.use(morgan((tokens, req, res) => {
-  
+
   const baseString = [
     tokens.method(req, res),
     tokens.url(req, res),
@@ -44,9 +17,9 @@ app.use(morgan((tokens, req, res) => {
     tokens.res(req, res, 'content-length'), '-',
     tokens['response-time'](req, res), 'ms'
   ].join(' ')
-  
+
   if (tokens.method(req, res) === 'POST') {
-    morgan.token('body', (req, res) => req.body)
+    morgan.token('body', (req) => req.body)
     return [
       baseString,
       JSON.stringify(tokens.body(req, res))
@@ -54,20 +27,19 @@ app.use(morgan((tokens, req, res) => {
   } else {
     return baseString
   }
-  
+
 }))
 
 app.get('/info', (req, res) => {
   const date = new Date()
   Contact.find({}).then(result => {
-    const personString = (result.length === 1 ? "person" : "persons")
+    const personString = (result.length === 1 ? 'person' : 'persons')
     res.send(`
       <p>Phonebook has info for ${result.length} ${personString}</p>
       <p>${date}</p>
     `)
   })
-  
-  
+
 })
 
 app.get('/api/persons', (req, res) => {
@@ -90,7 +62,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Contact.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -118,11 +90,11 @@ app.post('/api/persons', (req, res, next) => {
     return res.status(400).json({
       error: 'name or number missing'
     })
-  } 
+  }
 
   const contact = new Contact({
     name: body.name,
-    number: body.number || "-"
+    number: body.number || '-'
   })
 
   contact.save()

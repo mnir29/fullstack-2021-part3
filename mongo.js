@@ -15,11 +15,11 @@ if (process.argv.length<3) {
     name: String,
     number: String
   })
-  
+
   const Contact = mongoose.model('Contact', contactSchema)
 
   if (process.argv.length === 3) {
-    console.log("Phonebook:")
+    console.log('Phonebook:')
     Contact.find({}).then(result => {
       result.forEach(contact => {
         console.log(contact.name, contact.number)
@@ -27,13 +27,12 @@ if (process.argv.length<3) {
       mongoose.connection.close()
     })
   } else {
-    
     const contact = new Contact({
       name: process.argv[3],
       number: process.argv[4]
     })
-    
-    contact.save().then(response => {
+
+    contact.save().then(() => {
       console.log('Added', contact.name, contact.number, 'to phonebook')
       mongoose.connection.close()
     })
