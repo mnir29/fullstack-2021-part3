@@ -76,18 +76,6 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  }
-
-  next(error)
-}
-
-app.use(errorHandler)
-
 app.get('/api/persons/:id', (req, res, next) => {
   Contact.findById(req.params.id)
     .then(person => {
@@ -137,11 +125,27 @@ app.post('/api/persons', (req, res, next) => {
     number: body.number || "-"
   })
 
-  contact.save().then(savedContact => {
-    res.json(savedContact)
-  })
+  contact.save()
+    .then(savedContact => {
+      res.json(savedContact)
+    })
+    .catch(error => next(error))
 
 })
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
